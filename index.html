@@ -598,23 +598,16 @@
           </p>
         </div>
         <div class="figure">
-          <div class="figure-title">Figure 1. Conceptual pipeline from anatomy to dataset</div>
-          <div class="figure-diagram">
-Brain (continuous anatomy)
-          ↓ sampling &amp; digitization
-Physical signal (RF, optical, etc.)
-          ↓ discretization
-Pixels (2D slices) &amp; voxels (3D volumes)
-          ↓ organization
-Vectors, matrices, higher-order tensors
-          ↓ transforms
-Fourier &amp; related transforms used for reconstruction and analysis
-          </div>
-          <p class="figure-caption">
-            Adapted and expanded from <em>Bolding, NBL&nbsp;625 Lecture&nbsp;1</em>, emphasizing the flow
-            from continuous tissue to digital data structures.
-          </p>
-        </div>
+  <div class="figure-title">Figure 1. Conceptual pipeline from anatomy to dataset</div>
+  <img src="figure1_conceptual_pipeline.png" alt="Conceptual neuroimaging pipeline from brain anatomy to digital datasets" />
+  <p class="figure-caption">
+    Conceptual pipeline illustrating the transformation from continuous brain anatomy to
+    discrete digital representations used in neuroimaging. From physical signal acquisition,
+    data are discretized into pixels and voxels, organized into vectors, matrices, and tensors,
+    and transformed using Fourier-based methods for reconstruction and analysis.
+    Adapted from <em>Bolding, NBL&nbsp;625 Lecture&nbsp;1</em>.
+  </p>
+</div>
       </div>
       <div class="callout critical">
         <strong>Why these foundations matter</strong><br />
@@ -1166,4 +1159,5 @@ def square_wave(t, T, A, n_terms):
   </footer>
 </body>
 </html>
+
 
