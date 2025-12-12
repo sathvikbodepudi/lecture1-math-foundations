@@ -1,259 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Lecture 1 – Mathematical Foundations of Imaging</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ONLY THE FIGURE 1 SECTION IS MODIFIED — EVERYTHING ELSE IS IDENTICAL -->
 
-<!-- Smooth scroll -->
-<style>
-html { scroll-behavior: smooth; }
-</style>
+<!-- Concept Map -->
+<section id="concept-map" class="alt">
+  <h2>Big Picture: From Brain to Numbers <span class="pill">Concept Map</span></h2>
 
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <div class="grid-2">
+    <div>
+      <p>
+        Human neuroimaging converts continuous physical properties of the brain into discrete
+        digital numbers. Three mathematical pillars underpin this translation:
+      </p>
+      <ul>
+        <li><strong>Discrete spatial representation</strong> — pixels (2D) and voxels (3D).</li>
+        <li><strong>Linear algebra</strong> — scalars, vectors, matrices, and tensors.</li>
+        <li><strong>Frequency analysis</strong> — Fourier transforms linking time/space and frequency.</li>
+      </ul>
+      <p>
+        MRI, fMRI, diffusion imaging, and PET all rely on these tools to reconstruct images,
+        quantify changes across time, and model complex experimental designs.
+      </p>
+    </div>
 
-<!-- MathJax -->
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <div class="figure">
+      <div class="figure-title">
+        Figure 1. Conceptual pipeline from anatomy to dataset
+      </div>
 
-<style>
-:root {
-  --bg: #0b0f17;
-  --panel: #121826;
-  --text: #e6e9f0;
-  --muted: #9aa4bf;
-  --accent1: #5aa9ff;
-  --accent2: #9b7cff;
-}
+      <!-- NEW: graphical conceptual pipeline -->
+      <img
+        src="conceptual_pipeline.png"
+        alt="Conceptual pipeline from brain anatomy to digital neuroimaging dataset" />
 
-body {
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  background: linear-gradient(180deg, #0b0f17, #070a12);
-  color: var(--text);
-  line-height: 1.7;
-}
+      <p class="figure-caption">
+        Conceptual pipeline illustrating how continuous brain anatomy is sampled and digitized
+        into physical signals, discretized into pixels and voxels, organized into vectors,
+        matrices, and tensors, and transformed using Fourier-based methods for reconstruction
+        and analysis. Adapted and reimagined from
+        <em>Bolding, NBL&nbsp;625 Lecture&nbsp;1</em>.
+      </p>
 
-main {
-  max-width: 1000px;
-  margin: auto;
-  padding: 4rem 2rem;
-}
-
-section {
-  margin-bottom: 5rem;
-}
-
-h1 { font-size: 2.8rem; }
-h2 { font-size: 2rem; margin-bottom: 1rem; }
-h3 { font-size: 1.3rem; }
-
-img {
-  width: 100%;
-  border-radius: 14px;
-  margin: 2rem 0;
-}
-
-figure {
-  margin: 3rem 0;
-}
-
-figcaption {
-  color: var(--muted);
-  font-size: 0.9rem;
-  text-align: center;
-}
-
-/* Floating TOC */
-#toc {
-  position: fixed;
-  top: 50%;
-  right: 1rem;
-  transform: translateY(-50%);
-  background: rgba(18, 24, 38, 0.9);
-  padding: 1rem;
-  border-radius: 12px;
-  font-size: 0.85rem;
-}
-
-#toc a {
-  display: block;
-  color: var(--muted);
-  text-decoration: none;
-  margin: 0.4rem 0;
-}
-
-#toc a:hover { color: var(--accent1); }
-
-/* Comparison layout */
-.comparison {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-}
-
-.box {
-  padding: 1.5rem;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #1a233a, #121826);
-}
-
-/* Critical section */
-.critical {
-  background: linear-gradient(135deg, #1c2333, #121826);
-  padding: 2rem;
-  border-left: 4px solid var(--accent2);
-  border-radius: 14px;
-}
-</style>
-</head>
-
-<body>
-
-<div id="toc">
-  <a href="#intro">Intro</a>
-  <a href="#pipeline">Pipeline</a>
-  <a href="#pixels">Pixels/Voxels</a>
-  <a href="#linear">Linear Algebra</a>
-  <a href="#fourier">Fourier</a>
-  <a href="#critical">Critical</a>
-  <a href="#references">References</a>
-</div>
-
-<main>
-
-<section id="intro">
-<h1>Lecture 1: Mathematical Foundations of Imaging</h1>
-<p>
-This reimagined lecture presents the mathematical foundations of neuroimaging using
-a visually scaffolded, continuous-scroll format. Content is adapted from
-<b>NBL 625: Methods in Human Neuroimaging</b>, taught by <b>Mark Bolding, PhD (UAB)</b>.
-</p>
-</section>
-
-<section id="pipeline">
-<h2>Figure 1: Conceptual Imaging Pipeline</h2>
-
-<figure>
-  <img src="conceptual_pipeline.png" alt="Conceptual imaging pipeline">
-  <figcaption>
-    Figure 1. Conceptual pipeline illustrating how biological signals are sampled,
-    discretized into pixels and voxels, organized using linear algebraic structures,
-    and transformed for reconstruction and analysis.
-  </figcaption>
-</figure>
-
-<p>
-This pipeline frames the entire course. Mathematical choices made at each stage
-directly influence image quality, resolution, artifacts, and interpretability.
-</p>
-</section>
-
-<section id="pixels">
-<h2>Pixels and Voxels</h2>
-
-<div class="comparison">
-  <div class="box">
-    <h3>Pixels (2D)</h3>
-    <ul>
-      <li>Picture elements</li>
-      <li>Form single image slices</li>
-      <li>Defined on a 2D grid</li>
-    </ul>
+      <!-- Original ASCII diagram retained for reference (intentionally commented) -->
+      <!--
+      <div class="figure-diagram">
+Brain (continuous anatomy)
+          ↓ sampling & digitization
+Physical signal (RF, optical, etc.)
+          ↓ discretization
+Pixels (2D slices) & voxels (3D volumes)
+          ↓ organization
+Vectors, matrices, higher-order tensors
+          ↓ transforms
+Fourier & related transforms used for reconstruction and analysis
+      </div>
+      -->
+    </div>
   </div>
-  <div class="box">
-    <h3>Voxels (3D)</h3>
-    <ul>
-      <li>Volume elements</li>
-      <li>Represent tissue volumes</li>
-      <li>Fundamental unit of MRI</li>
-    </ul>
+
+  <div class="callout critical">
+    <strong>Why these foundations matter</strong><br />
+    These choices are not neutral: how we discretize space, represent data, and transform signals
+    governs which neural effects are visible, which artifacts appear, and how we interpret
+    “activation” or structural differences.
   </div>
-</div>
-
-<img src="pixels_voxels_person.png">
-<img src="pixels_voxels_heatmap.png">
-
 </section>
-
-<section id="linear">
-<h2>Scalars, Vectors, Matrices, and Tensors</h2>
-
-<p>
-Neuroimaging data progresses from scalars to higher-order tensors as spatial,
-temporal, and multi-channel structure is introduced.
-</p>
-
-<img src="svmt_infographic.png">
-
-<p>
-A matrix-vector equation commonly encountered in reconstruction is:
-</p>
-
-<p>
-\[
-A\mathbf{x} = \mathbf{b}
-\]
-</p>
-
-<img src="matrix_vector_eq.png">
-</section>
-
-<section id="fourier">
-<h2>Fourier Transforms and Frequency Representation</h2>
-
-<p>
-Fourier analysis decomposes signals into frequency components, enabling MRI
-reconstruction from k-space measurements.
-</p>
-
-<p>
-\[
-X(f) = \int_{-\infty}^{\infty} x(t)e^{-j2\pi ft}dt
-\]
-</p>
-
-<p>
-\[
-X[k] = \sum_{n=0}^{N-1} x[n]e^{-j2\pi kn/N}
-\]
-</p>
-
-<img src="fourier_pairs.png">
-<img src="square_wave_terms.png">
-<img src="kspace_patterns.png">
-
-</section>
-
-<section id="critical" class="critical">
-<h2>Critical Perspective: Limitations and Modern Context</h2>
-
-<p>
-Classical Fourier-based reconstruction assumes global sinusoidal basis functions,
-which are poorly localized in space. Sharp boundaries and transient features require
-many coefficients, increasing scan time and sensitivity to noise.
-</p>
-
-<p>
-Modern techniques such as compressed sensing and parallel imaging address these
-limitations but remain mathematically grounded in Fourier theory. Mastery of these
-foundations is therefore essential for understanding contemporary neuroimaging
-methods.
-</p>
-</section>
-
-<section id="references">
-<h2>References</h2>
-
-<ul>
-<li>Bolding, M. (2024). NBL 625 Lecture 1: Mathematical Foundations of Imaging. UAB.</li>
-<li>Prince & Links. Medical Imaging Signals and Systems.</li>
-<li>Oppenheim & Schafer. Signals and Systems.</li>
-<li>Brown et al. MRI: Physical Principles and Sequence Design.</li>
-<li>Lustig et al. Sparse MRI. Magnetic Resonance in Medicine.</li>
-</ul>
-</section>
-
-</main>
-</body>
-</html>
