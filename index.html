@@ -1,65 +1,1169 @@
-<!-- ONLY THE FIGURE 1 SECTION IS MODIFIED — EVERYTHING ELSE IS IDENTICAL -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>NBL 625 Lecture 1 – Mathematical Foundations of Imaging (Reimagined)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- MathJax for equations -->
+  <script
+    id="MathJax-script"
+    async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-alt: #060a1c;
+      --bg-soft: #0c1024;
+      --card: #0f172a;
+      --card-alt: #020617;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.18);
+      --accent-2: #a855f7;
+      --accent-2-soft: rgba(168, 85, 247, 0.2);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border-soft: #1f2937;
+      --danger: #f97373;
+      --warning: #fbbf24;
+      --success: #4ade80;
+      --figure-bg: #020617;
+      --toc-bg: rgba(15, 23, 42, 0.95);
+    }
 
-<!-- Concept Map -->
-<section id="concept-map" class="alt">
-  <h2>Big Picture: From Brain to Numbers <span class="pill">Concept Map</span></h2>
+    * {
+      box-sizing: border-box;
+    }
 
-  <div class="grid-2">
-    <div>
-      <p>
-        Human neuroimaging converts continuous physical properties of the brain into discrete
-        digital numbers. Three mathematical pillars underpin this translation:
-      </p>
-      <ul>
-        <li><strong>Discrete spatial representation</strong> — pixels (2D) and voxels (3D).</li>
-        <li><strong>Linear algebra</strong> — scalars, vectors, matrices, and tensors.</li>
-        <li><strong>Frequency analysis</strong> — Fourier transforms linking time/space and frequency.</li>
-      </ul>
-      <p>
-        MRI, fMRI, diffusion imaging, and PET all rely on these tools to reconstruct images,
-        quantify changes across time, and model complex experimental designs.
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background:
+        radial-gradient(circle at 0% 0%, #1d243f 0, transparent 48%),
+        radial-gradient(circle at 100% 0%, #1b1340 0, transparent 45%),
+        radial-gradient(circle at 50% 100%, #111827 0, #020617 70%);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 1.75rem 1rem 1.25rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+      background: radial-gradient(circle at 0% 0%, #1f2937 0, #020617 60%);
+    }
+
+    header .inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #f9fafb;
+    }
+
+    header h2 {
+      margin: 0;
+      font-weight: 400;
+      font-size: clamp(1rem, 1.7vw, 1.2rem);
+      color: var(--text-muted);
+    }
+
+    header .meta {
+      font-size: 0.85rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    header .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      border-radius: 999px;
+      padding: 0.25rem 0.7rem;
+      border: 1px solid rgba(156, 163, 175, 0.5);
+      background: rgba(15, 23, 42, 0.66);
+    }
+
+    header .tag strong {
+      color: #e5e7eb;
+    }
+
+    header p.muted {
+      max-width: 900px;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      column-gap: 2rem;
+      position: relative;
+    }
+
+    section {
+      margin: 1.5rem 0 2.5rem;
+      background: linear-gradient(
+          to bottom right,
+          rgba(15, 23, 42, 0.96),
+          rgba(2, 6, 23, 0.96)
+        );
+      border-radius: 1.25rem;
+      padding: 1.6rem 1.5rem 1.7rem;
+      box-shadow:
+        0 25px 60px rgba(15, 23, 42, 0.85),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(55, 65, 81, 0.8);
+      backdrop-filter: blur(14px);
+    }
+
+    section.alt {
+      background: linear-gradient(
+          to bottom right,
+          rgba(15, 23, 42, 0.96),
+          rgba(30, 64, 175, 0.92)
+        );
+      border: 1px solid rgba(96, 165, 250, 0.6);
+    }
+
+    section.tight {
+      padding-top: 1.2rem;
+      padding-bottom: 1.2rem;
+    }
+
+    section h2 {
+      margin-top: 0;
+      margin-bottom: 0.65rem;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    section h2 span.pill {
+      font-size: 0.68rem;
+      padding: 0.12rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--accent);
+    }
+
+    h3 {
+      margin-top: 1.2rem;
+      margin-bottom: 0.35rem;
+      font-size: 1.05rem;
+    }
+
+    p {
+      margin-top: 0.25rem;
+      margin-bottom: 0.6rem;
+      font-size: 0.95rem;
+    }
+
+    p.muted, .muted {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    ul, ol {
+      margin-top: 0.2rem;
+      padding-left: 1.3rem;
+      font-size: 0.95rem;
+    }
+
+    li + li {
+      margin-top: 0.2rem;
+    }
+
+    .callout {
+      border-radius: 0.9rem;
+      border-left: 4px solid var(--accent);
+      background: rgba(15, 23, 42, 0.95);
+      padding: 0.75rem 0.9rem;
+      margin: 0.9rem 0;
+      font-size: 0.9rem;
+    }
+
+    .callout.critical {
+      border-left-color: var(--warning);
+      background: rgba(24, 16, 5, 0.96);
+    }
+
+    .callout.limitation {
+      border-left-color: var(--danger);
+      background: rgba(39, 17, 23, 0.97);
+    }
+
+    .callout.success {
+      border-left-color: var(--success);
+      background: rgba(6, 36, 21, 0.97);
+    }
+
+    .callout strong {
+      display: inline-block;
+      margin-bottom: 0.25rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.9fr);
+      gap: 1.4rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 900px) {
+      .grid-2 {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .figure {
+      background: radial-gradient(circle at 0% 0%, #111827 0, #020617 65%);
+      border-radius: 0.9rem;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      padding: 0.7rem 0.7rem 0.65rem;
+      font-size: 0.86rem;
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.9);
+    }
+
+    .figure-title {
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 0.6rem;
+      margin-bottom: 0.45rem;
+    }
+
+    .figure-diagram {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
+        Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.8rem;
+      white-space: pre;
+      overflow-x: auto;
+      margin: 0.25rem 0 0.6rem;
+      padding: 0.35rem 0.4rem;
+      border-radius: 0.6rem;
+      background: #020617;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .figure-caption {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin: 0.3rem 0 0.6rem;
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 0.15rem 0.55rem;
+      font-size: 0.75rem;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      color: var(--text-muted);
+    }
+
+    .badge.critical {
+      border-color: rgba(248, 250, 252, 0.7);
+      color: #fed7aa;
+    }
+
+    .badge.neuro {
+      border-color: rgba(56, 189, 248, 0.75);
+      color: var(--accent);
+    }
+
+    .inline-math {
+      font-family: "STIX Two Math", "Times New Roman", serif;
+      font-size: 0.98em;
+    }
+
+    /* Reimagined PIXELS vs VOXELS comparison block */
+    .comparison-block {
+      margin-top: 1rem;
+    }
+
+    .comparison-container {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+      border-radius: 1rem;
+      overflow: hidden;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: linear-gradient(
+        120deg,
+        rgba(15, 23, 42, 0.98),
+        rgba(15, 23, 42, 0.98)
+      );
+      box-shadow: 0 16px 45px rgba(15, 23, 42, 0.95);
+    }
+
+    .comparison-column {
+      padding: 0.85rem 0.9rem 0.9rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .comparison-column.left {
+      background:
+        radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.22) 0, transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.2) 0, transparent 60%),
+        rgba(15, 23, 42, 0.96);
+    }
+
+    .comparison-column.right {
+      background:
+        radial-gradient(circle at 0% 0%, rgba(249, 115, 22, 0.18) 0, transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.25) 0, transparent 60%),
+        rgba(15, 23, 42, 0.96);
+    }
+
+    .comparison-column::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(
+          rgba(148, 163, 184, 0.09) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(148, 163, 184, 0.09) 1px,
+          transparent 1px
+        );
+      background-size: 16px 16px;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .comparison-column h3 {
+      margin-top: 0.2rem;
+      margin-bottom: 0.45rem;
+      font-size: 0.95rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+      position: relative;
+      z-index: 1;
+    }
+
+    .comparison-column ul {
+      margin: 0;
+      padding-left: 1.1rem;
+      font-size: 0.9rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .comparison-column li + li {
+      margin-top: 0.15rem;
+    }
+
+    /* Floating table of contents */
+    .toc {
+      position: fixed;
+      top: 6rem;
+      right: 1.6rem;
+      width: 210px;
+      max-height: calc(100vh - 8rem);
+      padding: 0.85rem 0.9rem;
+      background: var(--toc-bg);
+      border-radius: 0.9rem;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.95);
+      font-size: 0.8rem;
+      overflow-y: auto;
+      z-index: 40;
+    }
+
+    .toc-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .toc ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .toc li + li {
+      margin-top: 0.2rem;
+    }
+
+    .toc a {
+      color: var(--text-muted);
+      text-decoration: none;
+      display: block;
+      padding: 0.18rem 0.1rem;
+      border-radius: 0.35rem;
+    }
+
+    .toc a:hover {
+      color: var(--accent);
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    @media (max-width: 980px) {
+      .toc {
+        display: none;
+      }
+    }
+
+    .subtle-label {
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-bottom: 0.15rem;
+    }
+
+    .reference-list {
+      font-size: 0.84rem;
+      padding-left: 1.1rem;
+    }
+
+    .reference-list li + li {
+      margin-top: 0.3rem;
+    }
+
+    footer {
+      max-width: 1100px;
+      margin: 0 auto 2.5rem;
+      padding: 0 1.25rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    .link-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0.3rem 0 0.2rem;
+      font-size: 0.9rem;
+    }
+
+    .link-list li + li {
+      margin-top: 0.2rem;
+    }
+
+    .link-list a {
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(56, 189, 248, 0.6);
+    }
+
+    .link-list a:hover {
+      border-bottom-style: solid;
+    }
+
+    code {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
+        Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.82rem;
+      background: rgba(15, 23, 42, 0.9);
+      padding: 0.12rem 0.3rem;
+      border-radius: 0.3rem;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .code-block {
+      margin-top: 0.55rem;
+      background: #020617;
+      color: #e5e7eb;
+      border-radius: 0.7rem;
+      padding: 0.75rem 0.9rem;
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
+        Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.8rem;
+      overflow-x: auto;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="inner">
+      <h1>Lecture 1 – Mathematical Foundations of Imaging</h1>
+      <h2>Pixels, Voxels, Linear Algebra, and Fourier Transforms for Human Neuroimaging</h2>
+      <div class="meta">
+        <span class="tag">
+          <span>Course:</span><strong>NBL 625/425 – Methods in Human Neuroimaging</strong>
+        </span>
+        <span class="tag">
+          <span>Instructor:</span><strong>Mark Bolding, PhD (UAB)</strong>
+        </span>
+        <span class="tag">
+          <span>Student:</span><strong> Sathvik Bodepudi</strong>
+        </span>
+      </div>
+      <p class="muted">
+        This reimagined lecture covers the full content of Lecture&nbsp;1 and weaves in
+        limitations, recent advances, and methodological debates. It is designed as a
+        single, smooth-scrolling learning experience that students can use as an alternative to the original slides.
       </p>
     </div>
+  </header>
 
-    <div class="figure">
-      <div class="figure-title">
-        Figure 1. Conceptual pipeline from anatomy to dataset
-      </div>
+  <!-- Floating mini table of contents -->
+  <nav class="toc">
+    <div class="toc-title">On this page</div>
+    <ul>
+      <li><a href="#how-to-use">How to use this chapter</a></li>
+      <li><a href="#concept-map">Big picture</a></li>
+      <li><a href="#pixels-voxels">Pixels &amp; voxels</a></li>
+      <li><a href="#linear-algebra">Scalars → tensors</a></li>
+      <li><a href="#fourier">Fourier transforms</a></li>
+      <li><a href="#integration">Neuroimaging pipeline</a></li>
+      <li><a href="#critical-evaluation">Critical evaluation</a></li>
+      <li><a href="#pitfalls">Common pitfalls</a></li>
+      <li><a href="#summary">Summary &amp; self-check</a></li>
+      <li><a href="#references">References</a></li>
+    </ul>
+  </nav>
 
-      <!-- NEW: graphical conceptual pipeline -->
-      <img
-        src="conceptual_pipeline.png"
-        alt="Conceptual pipeline from brain anatomy to digital neuroimaging dataset" />
-
-      <p class="figure-caption">
-        Conceptual pipeline illustrating how continuous brain anatomy is sampled and digitized
-        into physical signals, discretized into pixels and voxels, organized into vectors,
-        matrices, and tensors, and transformed using Fourier-based methods for reconstruction
-        and analysis. Adapted and reimagined from
-        <em>Bolding, NBL&nbsp;625 Lecture&nbsp;1</em>.
+  <main>
+    <!-- How to Use -->
+    <section id="how-to-use">
+      <h2>How to Use This Chapter <span class="pill">Start Here</span></h2>
+      <p>
+        Read this page top-to-bottom once, then revisit specific sections as needed.
+        The flow is designed so that each new idea builds naturally on the last:
       </p>
+      <ol>
+        <li><strong>Skim the big-picture map</strong> to see how pixels, voxels, tensors, and Fourier transforms fit together.</li>
+        <li><strong>Work through each section</strong>, pausing at callouts labeled as limitations or critical perspectives.</li>
+        <li><strong>Engage with the images and demos</strong>—they are not decorative; they carry core intuition.</li>
+        <li><strong>Use the self-check</strong> at the end to confirm you can explain each major concept in your own words.</li>
+      </ol>
+      <div class="callout">
+        <strong>Primary source acknowledgment</strong><br />
+        Core content is adapted from:
+        <em>Mark Bolding, NBL 625/425 – Methods in Human Neuroimaging, Lecture&nbsp;1:
+        Background material on mathematical foundations of imaging, University of Alabama at Birmingham.</em>
+      </div>
+    </section>
 
-      <!-- Original ASCII diagram retained for reference (intentionally commented) -->
-      <!--
-      <div class="figure-diagram">
+    <!-- Concept Map -->
+    <section id="concept-map" class="alt">
+      <h2>Big Picture: From Brain to Numbers <span class="pill">Concept Map</span></h2>
+      <div class="grid-2">
+        <div>
+          <p>
+            Human neuroimaging converts continuous physical properties of the brain into discrete
+            digital numbers. Three mathematical pillars underpin this translation:
+          </p>
+          <ul>
+            <li><strong>Discrete spatial representation</strong> — pixels (2D) and voxels (3D).</li>
+            <li><strong>Linear algebra</strong> — scalars, vectors, matrices, and tensors.</li>
+            <li><strong>Frequency analysis</strong> — Fourier transforms linking time/space and frequency.</li>
+          </ul>
+          <p>
+            MRI, fMRI, diffusion imaging, and PET all rely on these tools to reconstruct images,
+            quantify changes across time, and model complex experimental designs.
+          </p>
+        </div>
+        <div class="figure">
+          <div class="figure-title">Figure 1. Conceptual pipeline from anatomy to dataset</div>
+          <div class="figure-diagram">
 Brain (continuous anatomy)
-          ↓ sampling & digitization
+          ↓ sampling &amp; digitization
 Physical signal (RF, optical, etc.)
           ↓ discretization
-Pixels (2D slices) & voxels (3D volumes)
+Pixels (2D slices) &amp; voxels (3D volumes)
           ↓ organization
 Vectors, matrices, higher-order tensors
           ↓ transforms
-Fourier & related transforms used for reconstruction and analysis
+Fourier &amp; related transforms used for reconstruction and analysis
+          </div>
+          <p class="figure-caption">
+            Adapted and expanded from <em>Bolding, NBL&nbsp;625 Lecture&nbsp;1</em>, emphasizing the flow
+            from continuous tissue to digital data structures.
+          </p>
+        </div>
       </div>
-      -->
-    </div>
-  </div>
+      <div class="callout critical">
+        <strong>Why these foundations matter</strong><br />
+        These choices are not neutral: how we discretize space, represent data, and transform signals
+        governs which neural effects are visible, which artifacts appear, and how we interpret
+        “activation” or structural differences. Later sections highlight specific limitations and
+        modern advances that build on this foundation.
+      </div>
+    </section>
 
-  <div class="callout critical">
-    <strong>Why these foundations matter</strong><br />
-    These choices are not neutral: how we discretize space, represent data, and transform signals
-    governs which neural effects are visible, which artifacts appear, and how we interpret
-    “activation” or structural differences.
-  </div>
-</section>
+    <!-- Pixels & Voxels -->
+    <section id="pixels-voxels">
+      <h2>Pixels and Voxels <span class="pill">Discrete Spatial Representation</span></h2>
+      <div class="grid-2">
+        <div>
+          <h3>Pixels: 2D building blocks</h3>
+          <p>
+            A <strong>pixel</strong> (picture element) is the smallest unit of a 2D digital image.
+            Each pixel stores information such as intensity or color at one location on a grid.
+          </p>
+          <ul>
+            <li>Higher pixel counts → finer 2D spatial resolution.</li>
+            <li>Each pixel approximates signal within a small area of a slice.</li>
+            <li>Medical images often treat pixel values as physically meaningful intensities.</li>
+          </ul>
+
+          <h3>Voxels: 3D building blocks</h3>
+          <p>
+            A <strong>voxel</strong> (volume element) is the 3D analogue of a pixel—a tiny cube of
+            tissue represented in a volumetric image.
+          </p>
+          <ul>
+            <li>Voxel size (e.g., 1×1×1&nbsp;mm) determines 3D spatial resolution.</li>
+            <li>Each voxel represents an average over a non-zero volume of brain tissue.</li>
+            <li>Whole-brain MRI volumes can contain hundreds of thousands of voxels.</li>
+          </ul>
+        </div>
+        <div class="figure">
+          <div class="figure-title">Figure 2. Pixels vs voxels in informal examples</div>
+          <img src="pixels_voxels_person.png" alt="Pixel character vs voxel character" />
+          <p class="figure-caption">
+            Cartoon example of a 2D pixel character (left) versus a 3D voxel figure (right).
+            This mirrors the transition from 2D slices to volumetric brain reconstructions.
+          </p>
+        </div>
+      </div>
+
+      <div class="figure" style="margin-top:1.0rem;">
+        <div class="figure-title">Figure 3. Pixels vs voxels in a grid representation</div>
+        <img src="pixels_voxels_heatmap.png" alt="Pixels vs voxels heatmap grids" />
+        <p class="figure-caption">
+          Illustration of pixels (left) as a 2D grid of picture elements, and voxels (right) as
+          stacked 3D volume elements. Adapted for NBL&nbsp;625/425 from source materials cited by
+          the student.
+        </p>
+      </div>
+
+      <!-- Reimagined PIXELS vs VOXELS text comparison -->
+      <div class="comparison-block">
+        <div class="comparison-container">
+          <div class="comparison-column left">
+            <h3>PIXELS</h3>
+            <ul>
+              <li>2D picture elements arranged on a grid.</li>
+              <li>Tiny squares describing a small area in a slice.</li>
+              <li>Resolution is measured in pixels per unit distance.</li>
+              <li>Used in CT, X-ray, and MRI slice images.</li>
+              <li>Best thought of as “what you see on the screen.”</li>
+            </ul>
+          </div>
+          <div class="comparison-column right">
+            <h3>VOXELS</h3>
+            <ul>
+              <li>3D volume elements arranged in a volumetric grid.</li>
+              <li>Tiny cubes describing a chunk of tissue.</li>
+              <li>Resolution is measured in voxel dimensions (e.g., 1&nbsp;mm³).</li>
+              <li>Used in MRI, fMRI, PET, and diffusion imaging.</li>
+              <li>Best thought of as “3D building blocks of the brain.”</li>
+            </ul>
+          </div>
+        </div>
+        <p class="figure-caption">
+          <strong>Figure 4.</strong> Redesigned textual comparison between pixels and voxels,
+          adapted from <em>Bolding, NBL&nbsp;625 Lecture&nbsp;1</em>.
+        </p>
+      </div>
+
+      <div class="callout limitation">
+        <strong>Limitation – Resolution is a tradeoff</strong><br />
+        Smaller voxels yield better spatial resolution but lower signal-to-noise ratio and
+        often longer scan times. In fMRI, balancing voxel size, coverage, and temporal
+        resolution is crucial; interpretations of “no activation” must consider whether
+        the voxel size and SNR were sufficient to detect the effect at all.
+      </div>
+    </section>
+
+    <!-- Linear algebra: scalars, vectors, matrices, tensors -->
+    <section id="linear-algebra">
+      <h2>Scalars, Vectors, Matrices, and Tensors <span class="pill">Linear Algebra Foundations</span></h2>
+      <div class="grid-2">
+        <div>
+          <h3>From single numbers to structured datasets</h3>
+          <p>
+            Linear algebra offers a language for organizing imaging data:
+          </p>
+          <ul>
+            <li><strong>Scalar</strong>: one number (e.g., a voxel’s intensity at one time).</li>
+            <li><strong>Vector</strong>: ordered list of numbers (e.g., time series of one voxel).</li>
+            <li><strong>Matrix</strong>: 2D grid of numbers (e.g., voxel × time or voxel × subject).</li>
+            <li><strong>Tensor</strong>: higher-order array (e.g., voxel × time × condition × subject).</li>
+          </ul>
+
+          <h3>Exam score analogy (from the lecture)</h3>
+          <ul>
+            <li>Scalar: one exam score.</li>
+            <li>Vector: a student’s scores across exams.</li>
+            <li>Matrix: scores for multiple students across exams.</li>
+            <li>Tensor: scores across exams, students, and semesters.</li>
+          </ul>
+          <p class="muted">
+            This analogy from <em>Bolding, NBL&nbsp;625 Lecture&nbsp;1</em> maps directly onto
+            neuroimaging datasets tracking many voxels across time, conditions, and participants.
+          </p>
+        </div>
+        <div class="figure">
+          <div class="figure-title">Figure 5. Scalar → vector → matrix → tensor (infographic)</div>
+          <img src="svmt_infographic.png" alt="Scalar, vector, matrix, tensor infographic" />
+          <p class="figure-caption">
+            Custom infographic illustrating how scalars, vectors, matrices, and tensors relate,
+            adapted specifically for this reimagined lecture.
+          </p>
+        </div>
+      </div>
+
+      <h3>Matrix–vector multiplication in imaging</h3>
+      <p>
+        A matrix can represent a linear transformation. In neuroimaging, matrices map between
+        different representations: design matrices relate predictors to observed signals,
+        and reconstruction operators map k-space samples to image voxels.
+      </p>
+
+      <div class="figure">
+        <div class="figure-title">Figure 6. A simple matrix–vector system</div>
+        <img src="matrix_vector_eq.png" alt="Matrix times vector equals vector A x = b" />
+        <p class="figure-caption">
+          Matrix–vector product <em>A&nbsp;x&nbsp;=&nbsp;b</em>, adapted from the lecture slides.
+          Each entry of <em>b</em> is a weighted sum of the <em>x</em> entries. Similar linear systems
+          appear in MRI reconstruction and GLM estimation.
+        </p>
+      </div>
+
+      <h3>Eigenvectors, determinants, and transformations</h3>
+      <p>
+        An <strong>eigenvector</strong> of a matrix is a direction that the matrix preserves
+        (up to scaling by an eigenvalue). Eigen-decompositions underlie methods like PCA,
+        frequently used to reduce the dimensionality of imaging data.
+      </p>
+      <p>
+        The <strong>determinant</strong> of a transformation measures how volumes change
+        under that mapping. In registration and morphometry, Jacobian determinants
+        quantify local expansion or compression between brain images.
+      </p>
+
+      <div class="callout critical">
+        <strong>Critical perspective – Tensors in diffusion MRI</strong><br />
+        Tensors are not just bigger matrices. In diffusion MRI, tensor models encode
+        directional dependence of water diffusion. Assumptions of symmetry, positive-definiteness,
+        and noise properties can strongly influence downstream measures (e.g., FA, MD).
+        Mis-specified tensor models may produce visually plausible but misleading maps.
+      </div>
+    </section>
+
+    <!-- Fourier transforms -->
+    <section id="fourier">
+      <h2>Fourier Transforms <span class="pill">From Time/Space to Frequency</span></h2>
+      <p>
+        The <strong>Fourier transform</strong> decomposes a signal into a mixture of sinusoids
+        at different frequencies. Instead of focusing only on how a signal changes over time or
+        space, we ask which frequencies are present and how strong they are.
+      </p>
+
+      <div class="badge-row">
+        <span class="badge neuro">MRI reconstruction</span>
+        <span class="badge neuro">Artifact characterization</span>
+        <span class="badge">Signal processing</span>
+        <span class="badge critical">Sampling limits</span>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <h3>Continuous-time Fourier transform</h3>
+          <p>
+            For a continuous-time signal <span class="inline-math">\(x(t)\)</span>, the Fourier transform
+            <span class="inline-math">\(X(f)\)</span> is
+          </p>
+          <p>
+            <span class="inline-math">
+              \( X(f) = \int_{-\infty}^{\infty} x(t)\, e^{-j 2\pi f t}\, dt \)
+            </span>
+          </p>
+          <p>
+            where <span class="inline-math">\(j = \sqrt{-1}\)</span>, <span class="inline-math">\(t\)</span> is time,
+            and <span class="inline-math">\(f\)</span> is frequency. Each frequency has a complex coefficient
+            encoding amplitude and phase.
+          </p>
+
+          <h3>Discrete-time Fourier transform (DFT)</h3>
+          <p>
+            Real experimental data are sampled at a finite set of time points
+            <span class="inline-math">\(n = 0, \dots, N-1\)</span>. A discrete Fourier transform can be written:
+          </p>
+          <p>
+            <span class="inline-math">
+              \( X[k] = \sum_{n=0}^{N-1} x[n]\, e^{-j2\pi kn/N}, \quad k = 0,\dots,N-1. \)
+            </span>
+          </p>
+          <p>
+            Efficient FFT algorithms compute this and are core to MRI reconstruction
+            and spectral analyses in EEG/MEG.
+          </p>
+        </div>
+        <div class="figure">
+          <div class="figure-title">Figure 7. Signals and their Fourier transforms</div>
+          <img src="fourier_pairs.png" alt="Common waveforms and their Fourier transforms" />
+          <p class="figure-caption">
+            Examples from Lecture&nbsp;1: a cosine, sinc, Gaussian, and double exponential
+            with corresponding Fourier magnitude spectra. These illustrate how time-domain
+            shape determines spectral spread.
+          </p>
+        </div>
+      </div>
+
+      <h3>From simple waves to square waves</h3>
+      <p>
+        Lecture&nbsp;1 shows how a square wave can be approximated using only sine waves at
+        odd harmonics. Adding more terms sharpens the edges but also introduces oscillations
+        near discontinuities (Gibbs phenomenon).
+      </p>
+
+      <div class="figure">
+        <div class="figure-title">Figure 8. Building a square wave from sinusoids</div>
+        <img src="square_wave_terms.png" alt="Square wave approximation with increasing terms" />
+        <p class="figure-caption">
+          Square wave approximations with 1, 3, 5, 10, and 50 terms, adapted from the lecture.
+          As more harmonics are added, the approximation becomes sharper but overshoots near
+          edges—a key intuition for understanding ringing artifacts in imaging.
+        </p>
+      </div>
+
+      <div class="code-block">
+# Pseudocode for constructing a square wave from odd harmonics
+A = 1          # amplitude
+T = 2 * π      # period
+t = linspace(0, 4 * π, 1000)
+
+def square_wave(t, T, A, n_terms):
+    y = zeros_like(t)
+    for n in range(1, n_terms + 1, 2):  # odd harmonics
+        y += (4 * A / (π * n)) * sin(2 * π * n * t / T)
+    return y
+      </div>
+      <p class="muted">
+        This pseudocode mirrors the Python example in <em>Bolding, NBL&nbsp;625 Lecture&nbsp;1</em>.
+      </p>
+
+      <div class="callout limitation">
+        <strong>Limitation – Ideal assumptions vs real scanners</strong><br />
+        Fourier methods assume linearity, stationarity, and sufficient sampling. In MRI,
+        motion, gradient imperfections, and time constraints all violate these assumptions
+        to varying degrees, producing aliasing, ghosting, and blurring if not addressed.
+      </div>
+
+      <h3>Fourier space (k-space) in MRI</h3>
+      <div class="figure">
+        <div class="figure-title">Figure 9. Sinusoidal patterns and points in k-space</div>
+        <img src="kspace_patterns.png" alt="k-space points and corresponding sinusoidal patterns" />
+        <p class="figure-caption">
+          Illustration of how individual points in k-space correspond to sinusoidal spatial
+          patterns in the image domain. Adapted for NBL&nbsp;625 from MRI-focused resources
+          (student to provide exact citation).
+        </p>
+      </div>
+      <p>
+        MRI scanners acquire data directly in k-space. The final image is obtained by an
+        inverse Fourier transform that converts this frequency representation into a
+        spatial map of voxel intensities.
+      </p>
+
+      <h3>Water–fat phase example</h3>
+      <div class="figure">
+        <div class="figure-title">Figure 10. Phase interaction of water and fat signals</div>
+        <img src="water_fat_phase.png" alt="Water and fat signal phase interaction with MRI images" />
+        <p class="figure-caption">
+          Example of water and fat signals being out of phase (left) and in phase (right).
+          Phase relationships in the frequency domain can dramatically alter the appearance
+          of voxels in the reconstructed image. Adapted from a standard MR physics example
+          (student to supply specific citation).
+        </p>
+      </div>
+
+      <h3>Interactive demos (from the original lecture)</h3>
+      <ul class="link-list">
+        <li>
+          <a href="https://www.compadre.org/osp/pwa/soundanalyzer/" target="_blank" rel="noopener noreferrer">
+            Microphone Sound Analyzer – live audio spectrum
+          </a>
+        </li>
+        <li>
+          <a href="https://audiomotion.app/" target="_blank" rel="noopener noreferrer">
+            audioMotion Analyzer – real-time audio spectrum visualizer
+          </a>
+        </li>
+        <li>
+          <a href="https://mriquestions.com/fourier-transform-ft.html" target="_blank" rel="noopener noreferrer">
+            MRIQuestions – Fourier Transform in MRI
+          </a>
+        </li>
+      </ul>
+      <p class="muted">
+        These demos help build intuition about how time/space changes relate to changes in
+        the Fourier spectrum—exactly the relationship exploited by MRI.
+      </p>
+
+      <div class="callout critical">
+        <strong>Critical perspective – Convolution and image quality</strong><br />
+        Blurring an image with a point spread function is equivalent to multiplying its Fourier
+        transform by a smoothing kernel. Imperfect gradients, motion, and reconstruction choices
+        effectively convolve anatomy with non-ideal kernels. Some apparent “activations” or subtle
+        structural findings may partly reflect these imaging-system properties.
+      </div>
+    </section>
+
+    <!-- Integration -->
+    <section id="integration">
+      <h2>How These Tools Work Together in Neuroimaging <span class="pill">Integration</span></h2>
+      <p>
+        In practice, pixels/voxels, linear algebra, and Fourier transforms form a tightly
+        linked pipeline:
+      </p>
+      <ol>
+        <li>
+          <strong>Acquisition in k-space</strong> — the scanner samples a signal that is
+          naturally expressed in a Fourier basis.
+        </li>
+        <li>
+          <strong>Reconstruction via FFT</strong> — inverse Fourier transforms map k-space
+          data to a voxelized representation of the brain.
+        </li>
+        <li>
+          <strong>Representation as matrices and tensors</strong> — multi-voxel, multi-time,
+          multi-subject datasets are arranged into matrices or higher-order tensors.
+        </li>
+        <li>
+          <strong>Linear modeling and decomposition</strong> — GLM, PCA, ICA, and related
+          tools use matrix and tensor operations to extract patterns.
+        </li>
+        <li>
+          <strong>Interpretation in anatomical space</strong> — results are mapped back onto
+          voxel grids and anatomical images for visualization and inference.
+        </li>
+      </ol>
+      <div class="callout success">
+        <strong>Take-home message</strong><br />
+        Without these mathematical foundations, modern neuroimaging would not exist. Mastery
+        of Lecture&nbsp;1 content is essential for critically evaluating acquisition settings,
+        pipelines, and scientific claims throughout the course.
+      </div>
+    </section>
+
+    <!-- Critical Evaluation -->
+    <section id="critical-evaluation">
+      <h2>Critical Evaluation: Limitations, Advances, and Debates <span class="pill">NBL 625 Component</span></h2>
+
+      <h3>1. Limitations of classical Fourier-based approaches</h3>
+      <ul>
+        <li>
+          <strong>Sampling limits and aliasing</strong> —
+          Nyquist sampling assumptions are often strained by scan time and patient comfort.
+          Under-sampling in k-space leads to aliasing and structured artifacts if reconstruction
+          is not adapted.
+        </li>
+        <li>
+          <strong>Stationarity assumptions</strong> —
+          Many Fourier analyses assume signals are stationary over the analysis window.
+          Task-related transients, drifts, and physiological fluctuations can violate this.
+        </li>
+        <li>
+          <strong>Noise and model mismatch</strong> —
+          Real scanners are not perfectly linear, shift-invariant systems. Gradient nonlinearity,
+          RF inhomogeneity, and physiological noise distort both time/space and frequency
+          representations.
+        </li>
+      </ul>
+
+      <div class="callout limitation">
+        <strong>Interpretation implication</strong><br />
+        When reading a methods section that simply says “standard Fourier reconstruction”
+        or “k-space was reconstructed with an FFT,” it is important to ask which assumptions
+        were made, whether they were violated, and how that might bias results.
+      </div>
+
+      <h3>2. Recent advances built on these foundations</h3>
+      <ul>
+        <li>
+          <strong>Parallel imaging (SENSE, GRAPPA)</strong> —
+          Uses multiple receive coils to reconstruct images from under-sampled k-space,
+          effectively trading spatial encoding burden between hardware and sampling density.
+        </li>
+        <li>
+          <strong>Compressed sensing</strong> —
+          Exploits sparsity of images in transform domains (e.g., wavelets) to reconstruct
+          high-quality images from dramatically fewer samples than classical Fourier theory
+          would suggest are necessary.
+        </li>
+        <li>
+          <strong>Model-based and deep-learning reconstructions</strong> —
+          Combine physical encoding models with learned priors to improve image quality and
+          reduce artifacts, moving beyond purely linear transforms.
+        </li>
+      </ul>
+
+      <div class="callout critical">
+        <strong>Connection back to Lecture&nbsp;1</strong><br />
+        All of these methods still use Fourier encoding, matrices, and tensors, but they
+        explicitly capitalize on additional structure—coil sensitivities, sparsity, learned
+        image manifolds—to bypass some limitations of classical Fourier reconstruction.
+      </div>
+
+      <h3>3. Ongoing debates</h3>
+      <ul>
+        <li>
+          <strong>How much acceleration is safe?</strong> —
+          Aggressive k-space under-sampling can introduce subtle, spatially structured
+          artifacts that may mimic or obscure true neural effects.
+        </li>
+        <li>
+          <strong>Time/space vs frequency-domain processing</strong> —
+          Some pipelines prioritize Fourier-domain filtering; others rely on time-domain
+          or spatial-domain approaches for motion and physiological correction. Each choice
+          reflects different assumptions and trade-offs.
+        </li>
+        <li>
+          <strong>Interpretation of high-dimensional decompositions</strong> —
+          PCA/ICA-derived “networks” or tensor components are mathematically well-defined
+          but sometimes biologically ambiguous. There is ongoing discussion about criteria
+          for treating such components as evidence for distinct neural systems.
+        </li>
+      </ul>
+    </section>
+
+    <!-- Pitfalls -->
+    <section id="pitfalls">
+      <h2>Common Pitfalls and Frequently Asked Questions <span class="pill">Anticipating Difficulties</span></h2>
+
+      <h3>“Is a voxel just a smaller pixel?”</h3>
+      <p>
+        Not exactly. A voxel is a 3D volume; it aggregates signal over a finite cube of tissue.
+        Partial volume effects (multiple tissue types in one voxel) can confound interpretation.
+      </p>
+
+      <h3>“Why do we need tensors instead of matrices?”</h3>
+      <p>
+        Matrices can only encode two axes at once. Imaging experiments often track space, time,
+        condition, and subject simultaneously. Tensors preserve this multi-axis structure instead
+        of flattening it, which aids interpretation and modeling.
+      </p>
+
+      <h3>“Fourier transforms feel abstract. How is this MRI?”</h3>
+      <p>
+        In MRI, the scanner acquires Fourier coefficients (k-space) by varying gradient fields.
+        Images are recovered via an inverse Fourier transform. Without Fourier theory, standard
+        MRI reconstruction would not work.
+      </p>
+
+      <h3>“Why do sharp edges cause ringing artifacts?”</h3>
+      <p>
+        Ideal square waves require infinitely many high-frequency components. Truncating the
+        series produces oscillations near edges (Gibbs ringing). Similar behavior occurs near
+        tissue boundaries in MR images, where acquisition bandwidth and reconstruction choices
+        limit the highest frequencies.
+      </p>
+    </section>
+
+    <!-- Summary -->
+    <section id="summary">
+      <h2>Summary and Self-Check <span class="pill">Review</span></h2>
+      <p>Before moving on, make sure you can:</p>
+      <ul>
+        <li>Explain the difference between pixels and voxels and why voxel size matters.</li>
+        <li>Give an example of scalar, vector, matrix, and tensor representations in neuroimaging.</li>
+        <li>State the continuous and discrete Fourier transform equations and describe them intuitively.</li>
+        <li>Describe at least two limitations of classical Fourier-based imaging methods.</li>
+        <li>Summarize one recent methodological advance (e.g., parallel imaging, compressed sensing) and how it builds on these foundations.</li>
+      </ul>
+      <p class="muted">
+        If you can comfortably answer these questions, you have mastered the major concepts
+        from Lecture&nbsp;1 and are ready for the rest of NBL&nbsp;625/425.
+      </p>
+    </section>
+
+    <!-- References -->
+    <section id="references" class="tight">
+      <h2>References <span class="pill">Citations</span></h2>
+
+      <p class="subtle-label">Primary source</p>
+      <ul class="reference-list">
+        <li>
+          Bolding, M. (2025). <em>NBL 625/425 – Methods in Human Neuroimaging, Lecture 1:
+          Background material on mathematical foundations of imaging</em>.
+          University of Alabama at Birmingham.
+        </li>
+      </ul>
+
+      <p class="subtle-label">Web demos and explanatory resources</p>
+      <ul class="reference-list">
+        <li>
+          Compadre OSP. (n.d.). <em>Microphone Sound Analyzer</em> [Interactive simulation].
+          Retrieved from <a href="https://www.compadre.org/osp/pwa/soundanalyzer/" target="_blank" rel="noopener noreferrer">https://www.compadre.org/osp/pwa/soundanalyzer/</a>
+        </li>
+        <li>
+          Vianna, H. (n.d.). <em>audioMotion Analyzer</em> [Web application]. Retrieved from
+          <a href="https://audiomotion.app/" target="_blank" rel="noopener noreferrer">https://audiomotion.app/</a>
+        </li>
+        <li>
+          <em>Fourier Transform (FT)</em>. (n.d.). MRIQuestions.com. Retrieved from
+          <a href="https://mriquestions.com/fourier-transform-ft.html" target="_blank" rel="noopener noreferrer">https://mriquestions.com/fourier-transform-ft.html</a>
+        </li>
+      </ul>
+
+      <p class="subtle-label">Additional figures / methodological advances</p>
+      <ul class="reference-list">
+        <li>
+          (Student: insert specific citations for any external MRI figures such as the water–fat
+          phase example, k-space pattern illustration, and scalar/vector/matrix/tensor infographic,
+          as well as any research papers on parallel imaging, compressed sensing, or deep-learning
+          reconstruction that you discuss in your teaching philosophy.)
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      This HTML page is a reimagined version of Lecture&nbsp;1 for NBL&nbsp;625/425.
+      Save as <code>index.html</code> in a GitHub Pages repository (or view locally in a
+      browser). You may also export it as a PDF (Print → Save as PDF) if a static copy
+      is required for submission.
+    </p>
+  </footer>
+</body>
+</html>
+
