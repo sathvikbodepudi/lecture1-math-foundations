@@ -42,7 +42,7 @@ lecture1-math-foundations/
   - Responsive layout with floating table of contents
   - Special components: callouts, figures, comparison blocks, badges
   - Mobile-responsive design (breakpoints at 900px, 980px)
-- **Lines 517-1168**: Semantic HTML content organized into sections:
+- **Lines 517-1167**: Semantic HTML content organized into sections:
   - Header with course metadata
   - Floating navigation TOC
   - 10 main content sections (how-to-use, concept-map, pixels-voxels, linear-algebra, fourier, integration, critical-evaluation, pitfalls, summary, references)
@@ -52,7 +52,7 @@ lecture1-math-foundations/
 All PNG files are **static educational diagrams** referenced in the HTML:
 - Figures are displayed using `.figure` CSS class containers
 - Each includes figure titles and captions
-- Average file size: 400KB-2MB (high-quality diagrams)
+- File sizes range from 32KB to 1.9MB (high-quality diagrams)
 
 ## Development Workflows
 
