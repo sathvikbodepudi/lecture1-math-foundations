@@ -361,9 +361,9 @@ Students should be able to:
 .toc                 /* Floating table of contents */
 
 /* Content containers */
-.section             /* Main content sections */
-.section.alt         /* Blue-gradient variant */
-.section.tight       /* Reduced padding */
+section              /* Main content sections (HTML element, not class) */
+section.alt          /* Blue-gradient variant */
+section.tight        /* Reduced padding */
 
 /* Figures and diagrams */
 .figure              /* Figure container with border/shadow */
