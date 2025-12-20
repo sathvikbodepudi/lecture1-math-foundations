@@ -13,6 +13,7 @@ A single-page, interactive HTML learning resource that covers:
 
 ### Technology Stack
 - **Pure HTML5/CSS3** - No build tools or frameworks
+- **Tufte CSS** - Design based on Edward Tufte's principles
 - **MathJax 3** - Mathematical equation rendering (CDN)
 - **Static hosting** - Designed for GitHub Pages or local viewing
 - **No dependencies** - Self-contained single HTML file
@@ -37,12 +38,12 @@ lecture1-math-foundations/
 ### File Descriptions
 
 #### index.html
-- **Lines 1-516**: Complete CSS styling system with:
-  - Dark theme color scheme (radial gradients, custom CSS variables)
-  - Responsive layout with floating table of contents
-  - Special components: callouts, figures, comparison blocks, badges
-  - Mobile-responsive design (breakpoints at 900px, 980px)
-- **Lines 517-1167**: Semantic HTML content organized into sections:
+- **Lines 1-343**: Complete Tufte CSS styling system with:
+  - Cream background (#fffff8) with serif typography (et-book, Palatino, Georgia)
+  - Wide margin layout (55% content column, 50% margin for sidenotes)
+  - Sidenotes and marginnotes for commentary and references
+  - Mobile-responsive design (breakpoint at 760px)
+- **Lines 345-663**: Semantic HTML content organized into sections:
   - Header with course metadata
   - Floating navigation TOC
   - 10 main content sections (how-to-use, concept-map, pixels-voxels, linear-algebra, fourier, integration, critical-evaluation, pitfalls, summary, references)
@@ -101,10 +102,11 @@ This repository is configured for GitHub Pages:
 - Preserve instructor/student metadata in header (lines 524-532)
 
 #### 2. Respect Visual Design System
-The page uses a carefully crafted dark theme:
-- **DO NOT** change CSS variable definitions (lines 14-32) without explicit request
-- Colors serve pedagogical purposes (accent colors differentiate content types)
-- Gradients create visual hierarchy and depth
+The page uses Tufte's design principles:
+- **DO NOT** change CSS variable definitions (lines 16-24) without explicit request
+- Minimalist aesthetic: cream background, serif fonts, subtle colors
+- Wide margins for sidenotes create breathing room and commentary space
+- No heavy borders, shadows, or gradients - let content and typography shine
 
 #### 3. Mathematical Notation
 - **MathJax** is used for all equations (inline and display)
@@ -129,16 +131,16 @@ Each section follows this pattern:
 </section>
 ```
 
-#### 5. Callout Types and Usage
-- `.callout` (default): General information boxes, sources
-- `.callout.critical`: Critical perspectives, methodological debates
-- `.callout.limitation`: Known limitations, tradeoffs, caveats
-- `.callout.success`: Take-home messages, key insights
+#### 5. Sidenotes and Marginnotes Usage
+- `.marginnote`: Unnumbered margin notes for commentary, sources, limitations
+- `.sidenote`: Numbered sidenotes (auto-incrementing) for detailed asides
+- Use `<span class="newthought">` for small-caps emphasis at section starts
 
-**When to add callouts**:
+**When to add marginnotes**:
 - After introducing a concept that has limitations
 - When presenting critical evaluation points
 - For summarizing important insights
+- For source attributions and references
 
 #### 6. Image References
 All images are in the **root directory** and follow this naming convention:
@@ -150,9 +152,9 @@ All images are in the **root directory** and follow this naming convention:
 
 #### Adding a New Section
 1. Choose a unique `id` (lowercase, hyphens)
-2. Add to floating TOC (lines 543-556)
-3. Follow existing section structure pattern
-4. Place between existing sections in logical flow
+2. Follow existing section structure pattern (h2 for section title, h3 for subsections)
+3. Place between existing sections in logical flow
+4. Use marginnotes for critical commentary
 5. Update "Summary and Self-Check" if needed
 
 #### Modifying Equations
@@ -178,22 +180,22 @@ def function_name():
 ```
 
 #### Creating Comparison Blocks
-See lines 669-696 for the PIXELS vs VOXELS comparison pattern:
-- Use `.comparison-container` with two `.comparison-column` divs
-- Left column has `.left` class (blue gradient)
-- Right column has `.right` class (orange/purple gradient)
+See pixels vs voxels comparison for pattern:
+- Use `.comparison` div with two `.comparison-column` divs
+- Simple grid layout without heavy styling
+- Use small-caps h3 headers for comparison headings
 
 ### Responsive Design Considerations
 
-- **Desktop** (>980px): Floating TOC visible on right side
-- **Tablet** (900px-980px): TOC hidden, single-column layout
-- **Mobile** (<900px): Grid-2 layouts collapse to single column
+- **Desktop** (>760px): Content 55% width, sidenotes in right margin
+- **Mobile** (≤760px): Full-width content, sidenotes appear inline with background
 
 When editing:
 - Test at multiple viewport sizes
 - Avoid hardcoded widths
-- Use relative units (rem, em, %, vw/vh)
+- Use relative units (rem, em, %)
 - Images automatically scale to container width
+- Sidenotes/marginnotes automatically reflow on mobile
 
 ### Accessibility Best Practices
 
@@ -244,26 +246,32 @@ Before committing changes:
 ### Common Pitfalls to Avoid
 
 1. **Breaking MathJax**
-   - Don't remove the MathJax script tag (lines 8-12)
+   - Don't remove the MathJax script tag (lines 7-12)
    - Don't escape special characters inside `\( \)` delimiters
    - Test all equations after editing
 
-2. **CSS Conflicts**
-   - Don't add inline styles - use existing classes
-   - Don't override CSS variables without good reason
-   - Test changes across different sections
+2. **Breaking Tufte Layout**
+   - Don't add heavy borders, shadows, or gradients
+   - Don't change the margin width ratio (55% content, 50% margin)
+   - Maintain serif typography - don't switch to sans-serif
+   - Keep background cream (#fffff8), not white or dark
 
-3. **Image Paths**
+3. **Sidenote/Marginnote Misuse**
+   - Use `.marginnote` for most commentary (unnumbered)
+   - Use `.sidenote` only if you need numbered references
+   - Don't nest sidenotes inside other elements
+
+4. **Image Paths**
    - All images are in root directory
    - Use relative paths: `src="image.png"` not `src="/image.png"`
    - Check that new images are committed to git
 
-4. **Accessibility Violations**
+5. **Accessibility Violations**
    - Don't skip heading levels (h2→h4)
-   - Don't use color alone to convey meaning
+   - Ensure sufficient contrast (current palette is WCAG AA compliant)
    - Don't remove alt attributes from images
 
-5. **Content Integrity**
+6. **Content Integrity**
    - Don't modify citations without verification
    - Don't change technical terminology without domain expertise
    - Preserve all acknowledgments and attributions
@@ -356,85 +364,76 @@ Students should be able to:
 
 ### CSS Class Reference
 ```css
-/* Layout */
-.grid-2              /* Two-column responsive grid */
-.toc                 /* Floating table of contents */
-
-/* Content containers */
-section              /* Main content sections (HTML element, not class) */
-section.alt          /* Blue-gradient variant */
-section.tight        /* Reduced padding */
-
-/* Figures and diagrams */
-.figure              /* Figure container with border/shadow */
-.figure-title        /* Figure title (before image) */
-.figure-caption      /* Figure caption (after image) */
-.figure-diagram      /* Monospace code diagrams */
-
-/* Callouts */
-.callout             /* Default info callout */
-.callout.critical    /* Warning/critical perspective (yellow) */
-.callout.limitation  /* Limitation notice (red) */
-.callout.success     /* Success/take-home (green) */
-
-/* Badges and tags */
-.badge               /* Small pill-shaped labels */
-.badge.critical      /* Warning badge */
-.badge.neuro         /* Neuro-specific badge (accent color) */
-.tag                 /* Header metadata tags */
-
 /* Typography */
-.inline-math         /* MathJax inline math wrapper */
-.muted               /* Secondary text color */
-.subtle-label        /* Uppercase section labels */
+.newthought          /* Small-caps emphasis at section starts */
+.subtitle            /* Italic subtitle below h1 */
+.meta                /* Course/instructor metadata */
+
+/* Margins and sidenotes */
+.sidenote            /* Numbered sidenote in margin (auto-numbered) */
+.marginnote          /* Unnumbered margin note */
+.sidenote-number     /* Counter for sidenotes */
+
+/* Figures */
+figure               /* Standard figure container */
+figure.fullwidth     /* Full-width figure (90% of page) */
+figcaption           /* Figure captions */
+
+/* Layout */
+article              /* Main article wrapper */
+section              /* Content sections (HTML element) */
 
 /* Specialized */
-.comparison-container /* Pixels vs voxels comparison */
-.comparison-column    /* Individual comparison column */
-.code-block          /* Code/pseudocode blocks */
-.link-list           /* Unstyled list of links */
-.reference-list      /* Citation list styling */
+.comparison          /* Two-column comparison grid */
+.comparison-column   /* Individual comparison column */
+.badge               /* Small inline labels */
+
+/* Math and code */
+.inline-math         /* MathJax inline math wrapper */
+pre                  /* Code blocks (HTML element) */
+code                 /* Inline code (HTML element) */
+
+/* Text styles */
+.epigraph            /* Pull quotes/epigraphs */
 ```
 
 ### Color Variables
 ```css
---bg: #050816              /* Main background */
---accent: #38bdf8          /* Primary accent (cyan) */
---accent-2: #a855f7        /* Secondary accent (purple) */
---text-main: #e5e7eb       /* Primary text */
---text-muted: #9ca3af      /* Secondary text */
---danger: #f97373          /* Error/limitation red */
---warning: #fbbf24         /* Warning yellow */
---success: #4ade80         /* Success green */
+--bg: #fffff8              /* Cream background (Tufte style) */
+--text: #111               /* Dark text */
+--text-muted: #555         /* Muted text for captions */
+--accent: #a00000          /* Dark red accent (rarely used) */
+--border: #ccc             /* Light gray borders */
+--margin-bg: #fefef6       /* Slight tint for mobile sidenotes */
+--code-bg: #f5f5f0         /* Light beige for code blocks */
 ```
 
 ### Common HTML Patterns
 
-**Section with figure:**
+**Section with marginnote:**
 ```html
 <section id="section-name">
-  <h2>Section Title <span class="pill">Category</span></h2>
-  <div class="grid-2">
-    <div>
-      <p>Content here...</p>
-    </div>
-    <div class="figure">
-      <div class="figure-title">Figure X. Title</div>
-      <img src="image.png" alt="Description" />
-      <p class="figure-caption">Caption text.</p>
-    </div>
-  </div>
+  <h2>Section Title</h2>
+  <p><span class="newthought">Opening thought</span> with small caps...</p>
+
+  <p class="marginnote"><strong>Note:</strong> Critical commentary or limitation here.</p>
+
+  <p>Main content continues...</p>
 </section>
 ```
 
-**Adding to TOC:**
+**Adding a figure:**
 ```html
-<nav class="toc">
-  <div class="toc-title">On this page</div>
-  <ul>
-    <li><a href="#section-id">Section Name</a></li>
-  </ul>
-</nav>
+<figure>
+  <img src="image.png" alt="Description" />
+  <figcaption><strong>Figure X.</strong> Caption text with context.</figcaption>
+</figure>
+
+<!-- For full-width figures -->
+<figure class="fullwidth">
+  <img src="image.png" alt="Description" />
+  <figcaption><strong>Figure X.</strong> Caption text.</figcaption>
+</figure>
 ```
 
 ## Support and Resources
@@ -458,12 +457,14 @@ section.tight        /* Reduced padding */
 
 ## Summary for AI Assistants
 
-This repository is a **single-page educational website** about mathematical foundations of neuroimaging. It requires:
+This repository is a **single-page educational website** about mathematical foundations of neuroimaging, designed with **Tufte's principles**: minimalism, wide margins for sidenotes, serif typography, and integration of figures with text.
+
+Key requirements:
 - **Respect for academic content** (citations, attributions, technical accuracy)
 - **Careful handling of math rendering** (MathJax)
-- **Preservation of visual design** (dark theme, gradients, responsive layout)
+- **Preservation of Tufte aesthetic** (cream background, serif fonts, sidenotes, no heavy styling)
 - **Accessibility awareness** (semantic HTML, alt text, contrast)
 
-The repository is **intentionally simple** - no build tools, no frameworks, just clean HTML/CSS. Keep it that way. When in doubt, follow existing patterns and test thoroughly.
+The repository is **intentionally simple** - no build tools, no frameworks, just clean HTML/CSS inspired by Edward Tufte's design philosophy. When in doubt, favor clarity and readability over ornamentation.
 
-**Most important**: This is educational content for graduate students. Accuracy, clarity, and accessibility are paramount. When editing technical content, verify against domain literature. When changing design, ensure it serves the learning objectives.
+**Most important**: This is educational content for graduate students. Accuracy, clarity, and accessibility are paramount. When editing technical content, verify against domain literature. When changing design, ensure it serves the learning objectives and maintains the Tufte aesthetic.
